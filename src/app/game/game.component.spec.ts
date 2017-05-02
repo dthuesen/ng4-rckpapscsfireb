@@ -1,25 +1,39 @@
 /* tslint:disable:no-unused-variable */
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms'
 import { By } from '@angular/platform-browser';
 
 import { ComputerComponent } from '../computer/computer.component';
 import { GameComponent } from './game.component';
+import { HighScoreComponent } from '../high-score/high-score.component';
 import { PlayerComponent } from '../player/player.component';
 import { ScoreComponent } from '../score/score.component';
 import { WinnerDisplayComponent } from '../winner-display/winner-display.component';
-import { MdCard } from '@angular/material';
+import { MdCard, MdCardHeader, MdCardContent, MdInputContainer } from '@angular/material';
+
+import { HighscoresService } from '../highscores.service';
+import { Highscore } from '../shared/highscore.model'
 
 describe('Rock, Paper, Stone Game - GameComponent (container component)', () => {
 
   beforeEach( () => {
     TestBed.configureTestingModule({
+      imports: [FormsModule],
       declarations: [
         ComputerComponent,
         GameComponent,
+        HighScoreComponent,
         PlayerComponent,
         ScoreComponent,
         WinnerDisplayComponent,
-        MdCard
+        MdCard,
+        MdCardContent,
+        MdCardHeader,
+        MdInputContainer
+      ],
+      providers: [
+        Highscore,
+        HighscoresService
       ]
     })
     .compileComponents();
@@ -28,6 +42,7 @@ describe('Rock, Paper, Stone Game - GameComponent (container component)', () => 
   describe('/ Component parts', () => {
     let component: GameComponent;
     let fixture: ComponentFixture<GameComponent>;
+    let componentService: HighscoresService;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(GameComponent);
