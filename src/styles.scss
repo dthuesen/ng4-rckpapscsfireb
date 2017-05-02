@@ -64,6 +64,10 @@ body {
 /*****************************
  *  4. Text
  *****************************/
+ 
+ .text-center {
+   text-align: center;
+ }
 
 .trade-winds-4 {
   font-family: 'Trade Winds';
@@ -265,6 +269,43 @@ body {
 }
 .height-130 {
   min-height: 130px;
+}
+
+.width-100 {
+  width:100% !important; 
+}
+.width-90 {
+  width:90%; 
+}
+.width-80 {
+  width:80%; 
+}
+.width-70 {
+  width:70%; 
+}
+.width-60 {
+  width:60%; 
+}
+.width-50 {
+  width:50%; 
+}
+.width-40 {
+  width:40% !important; 
+}
+.width-30 {
+  width:30%; 
+}
+.width-25 {
+  width:25% !important; 
+}
+.width-20 {
+  width:20% !important; 
+}
+.width-15 {
+  width:15%; 
+}
+.width-10 {
+  width:10%; 
 }
 
 

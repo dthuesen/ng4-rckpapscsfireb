@@ -1,11 +1,47 @@
 <h1 class="bubblegum-sans-4 tile-no-background height-130">{{title}}</h1>
 
-<app-player [playerDisplayText]="playerText" (choiceSet)="setPlayersChoice($event)" [buttonsDisabled]="buttonsDisabled" ></app-player>
+<div *ngIf="showPlayerAndComputer" >
+  <app-player [playerDisplayText]="playerText" (choiceSet)="setPlayersChoice($event)" [buttonsDisabled]="buttonsDisabled" ></app-player>
+</div>
 <app-winner-display [winnerDisplayText]="winnerDisplayText" [reason]="reason" ></app-winner-display>
-<app-computer [computerDisplayText]="computerText"></app-computer>
+<div *ngIf="showPlayerAndComputer" >
+  <app-computer [computerDisplayText]="computerText"></app-computer>
+</div>
+<div *ngIf="saveHighscoreVisible">
+  <app-high-score (savePlayerData)="setPlayerData($event)"></app-high-score>
+</div>
+
 <app-score [playersScore]="playersScore" [computersScore]="computersScore" ></app-score>
+
+
 
 <div *ngIf="restartIsActive">
   <button md-raised-button class="reset-button"  id="new-game" (click)="newGame()" >Neustart</button>
 </div>
+
+<md-card class="background-middle-dark" *ngIf="sortedHighscores.length > 0">
+  <md-card-header>
+    <h2 class="light-text ranchers-2-dark">Highscores:</h2>
+  </md-card-header>
+  <md-card-content>
+    <table>
+      <tr class="ranchers-1 text-center width-100">
+        <th class="width-40">Player Name</th>
+        <th class="width-15">Player Score</th>
+        <th class="width-15">Computer Score</th>
+        <th class="width-25">Game Indicator</th>
+      </tr>
+      <tr *ngFor="let score of sortedHighscores" class="light-text ranchers-2-dark text-center">
+        <td>{{score.namePlayer}}</td>
+        <td>{{score.scorePlayer}}</td>
+        <td>{{score.scoreComputer}}</td>
+        <td>{{score.score}}</td>
+      </tr>
+    </table>
+    
+  </md-card-content>
+  <!--<ol *ngFor="let score of highscores">
+    <li>{{score.namePlayer}}, {{score.score}}</li>
+  </ol>-->
+</md-card>
 

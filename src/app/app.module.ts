@@ -20,6 +20,10 @@ import {
   MdCardModule,
   MdGridListModule
   } from '@angular/material';
+import { HighScoreComponent } from './high-score/high-score.component';
+
+// Services
+import { HighscoresService } from './highscores.service';
 
 
 @NgModule({
@@ -32,6 +36,7 @@ import {
     routingComponents,
     ScoreComponent,
     WinnerDisplayComponent,
+    HighScoreComponent,
   ],
   imports: [
     appRouting,
@@ -43,7 +48,7 @@ import {
     MdButtonModule,
     MdGridListModule,
   ],
-  providers: [],
+  providers: [HighscoresService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

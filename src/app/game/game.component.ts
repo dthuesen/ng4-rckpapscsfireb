@@ -1,62 +1,55 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { PlayerComponent } from '../player/player.component';
+import { HighscoresService } from '../highscores.service';
+import { Highscore } from '../shared/highscore.model';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css']
+  styleUrls: ['./game.component.css'],
 })
 export class GameComponent {
 
   title = 'Schere, Stein, Papier';
-  playersScore      = 0;
-  computersScore    = 0;
-  playersChoice:    number = null;
-  computersChoice:  number = null;
-  winnerDisplayText = '';
-  reason            = '';
-  reasons            = [
+  playersScore          = 0;
+  computersScore        = 0;
+  playersChoice:        number = null;
+  computersChoice:      number = null;
+  winnerDisplayText     = '';
+  reason                = '';
+  reasons               = [
     'Papier wickelt den Stein ein',
     'Schere schneidet Papier',
     'Stein macht die Schere stumpf',
     'Ihr habt beide haben das Gleiche gezogen!'
     ];
 
-  // computerText     = '';
-  // playerText       = '';
-  computerText     = 'Computer wartet auf dich...';
-  playerText       = 'Spiel deine Hand!';
 
-  restartIsActive  = false;
-  buttonsDisabled  = false;
+  computerText          = 'Computer wartet auf dich...';
+  playerText            = 'Spiel deine Hand!';
 
-  constructor() {
-    /**
-     *  INFO:: This function call below is not necessary anymore.
-     *  It stays only for illustrating the refactoring (CASE 1).
-     * */
-    // this.startGame();
-  }
+  currentScore = {
+    namePlayer: '',
+    scorePlayer: 0,
+    scoreComputer: 0,
+    score: 0
+  };
+  highscores: Highscore[];
+  sortedHighscores: Highscore[];
 
-  /**
-   *  INFO:: The method startGame() below has no additional aspect. It is not necessary anymore.
-   *  It stays only for illustrating the refactoring (CASE 1).
-   * */
-  // // (T) - This method is a place for more starting actions otherwise spare
-  // or move method body from displayStartHeadlines() into this method.
-  // startGame() {
-  //   // this.displayStartHeadlines();
-  // }
+  restartIsActive       = false;
+  buttonsDisabled       = false;
+  saveHighscoreVisible  = false;
+  showPlayerAndComputer = true;
 
-  /**
-   *  INFO:: The method displayStartHeadlines() below has no additional aspect. It is not necessary anymore.
-   *  It stays only for illustrating the refactoring (CASE 1).
-   * */
-  // // (T) Setting friendly text to start the game
-  // displayStartHeadlines() {
-  //   this.computerText = 'Computer wartet auf dich...';
-  //   this.playerText   = 'Spiel deine Hand!';
-  // }
+
+  constructor(@Inject(HighscoresService)
+      private highscoresService: HighscoresService
+    ) {
+      this.highscores = highscoresService.highscores;
+      this.sortedHighscores = highscoresService.sortedHighscores;
+    }
+
 
   // (T) Translates the Text of the button event into numbers.
   // Although this step is not necessary it makes the button
@@ -84,7 +77,7 @@ export class GameComponent {
         this.countdown();
         break;
     }
-    this.restartIsActive = true;
+    // this.restartIsActive = true;
   }
 
   // (T) The computers choice (number) will be stored for
@@ -96,6 +89,7 @@ export class GameComponent {
     this.setComputersChoiceText(number);
     this.calculateWinner(this.playersChoice, this.computersChoice);
     this.buttonsDisabled = false;
+    this.restartIsActive = true;
   }
 
   // (T) translates the computers choice (number) into text
@@ -192,22 +186,48 @@ export class GameComponent {
     console.log(`Score - Du: ${this.playersScore} : ${this.computersScore} Computer `);
   }
 
+  setPlayerData(event) {
+    // 3) Set players name to current score
+    this.currentScore.namePlayer = event.namePlayer;
+    // this.saveHighscore(this.currentScore);
+    // 4) Push highscores to service
+    this.highscoresService.pushHighscore(this.currentScore);
+    this.currentScore = {
+      namePlayer: '',
+      scorePlayer: 0,
+      scoreComputer: 0,
+      score: 0
+    };
+    this.saveHighscoreVisible  = false;
+    this.showPlayerAndComputer = true;
+    this.sortedHighscores = this.highscoresService.sortedHighscores;
+  }
+
+  showSaveHighscore() {
+    // Show HighscoresComponent and hide PlayerComponent & ComputerComponent
+    this.saveHighscoreVisible  = true;
+    this.showPlayerAndComputer = false;
+  }
+
+  resetScores() {
+    this.playersScore          = 0;
+    this.computersScore        = 0;
+    this.winnerDisplayText     = 'Neues Spiel, neues Glück!';
+    this.playersChoice         = null;
+    this.computersChoice       = null;
+    this.playerText            = 'Spiel deine Hand!';
+    this.computerText          = 'Computer wartet auf dich...';
+    this.restartIsActive       = false;
+    this.buttonsDisabled       = false;
+  }
+
   // (T) Resets the counter and starts a new game
   newGame() {
-    this.playersScore      = 0;
-    this.computersScore    = 0;
-    this.winnerDisplayText = 'Neues Spiel, neues Glück!';
-    this.playersChoice     = null;
-    this.computersChoice   = null;
-    this.playerText        = 'Spiel deine Hand!';
-    this.computerText      = 'Computer wartet auf dich...';
-    this.restartIsActive   = false;
-    this.buttonsDisabled   = false;
-    /**
-     *  INFO:: This function call below is not necessary anymore.
-     *  It stays only for illustrating the refactoring (CASE 1).
-     * */
-    // this.startGame();
+    this.currentScore.scorePlayer = this.playersScore;
+    this.currentScore.scoreComputer = this.computersScore;
+
+    this.showSaveHighscore();
+    this.resetScores();
   }
 
 }
